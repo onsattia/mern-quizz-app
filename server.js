@@ -1,12 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
 const routes = require("./routes/students");
 // set up express app
 const app = express();
 
-// body-parser middleware
-app.use(bodyParser.json());
+// DB config
+const db = require("./config/keys").mongoURI;
+
+// Connect to MongoDB
+mongoose
+  .connect(db)
+  .then(() => console.log("MongoDB Connected"))
+  .catch(err => console.log(err));
 
 // init routes
 app.use(routes);
