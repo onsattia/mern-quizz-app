@@ -4,6 +4,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
+const passport = require("passport");
 
 const Student = require("../models/Student");
 
@@ -65,7 +66,6 @@ router.post("/login", (req, res) => {
     }
     bcrypt.compare(password, student.password).then(isMatch => {
       if (isMatch) {
-        res.json({ msg: "Success" });
         // Sign token
         jwt.sign(
           { id: student.id, name: student.name },
@@ -92,5 +92,16 @@ router.post("/login", (req, res) => {
 router.delete("/:id", (req, res) => {
   res.send({ type: "DELETE" });
 });
+
+// @route POST students/current
+// @desc  Return current student
+// @access Private
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json(req.student);
+  }
+);
 
 module.exports = router;
