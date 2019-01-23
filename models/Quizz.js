@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Create Schema
-const StudentSchema = new Schema({
-  label: {
+const QuizzSchema = new Schema({
+  question: {
     type: String,
     required: true
   },
@@ -11,8 +11,10 @@ const StudentSchema = new Schema({
     type: [String],
     required: true
   },
-  point: {
+  points: {
     type: Number,
     required: true
   }
 });
+
+module.exports = Quizz = mongoose.model("quizz", QuizzSchema);
