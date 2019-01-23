@@ -12,31 +12,27 @@ const User = require("../models/User");
 // @desc get all users
 // @access Private
 
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    User.find()
-      .then(user => res.json(user))
-      .catch(err => res.status(404).json({ noUserFound: "No user found" }));
-  }
-);
+router.get("/", (req, res) => {
+  User.find()
+    .then(user => res.json(user))
+    .catch(err => res.status(404).json({ noUserFound: "No user found" }));
+});
 
 // @route GET user/:id
 // @desc  Get user by id
 // @access Private
 
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    User.findById(req.params.id)
-      .then(user => res.json(user))
-      .catch(err =>
-        res.status(404).json({ noUserFound: "No user found with this ID" })
-      );
-  }
-);
+// router.get(
+//   "/:id",
+//   passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     User.findById(req.params.id)
+//       .then(user => res.json(user))
+//       .catch(err =>
+//         res.status(404).json({ noUserFound: "No user found with this ID" })
+//       );
+//   }
+// );
 
 // @route POST users/register
 // @desc  Register user
