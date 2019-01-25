@@ -8,7 +8,7 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "admin": "npm start --prefix admin",
-    "dev": "concurrently \"npm run server\" \"npm run admin\""
+    "dev": "concurrently - killall node \"npm run server\" \"npm run admin\""
   },
   "author": "Ons Attia",
   "license": "MIT",
