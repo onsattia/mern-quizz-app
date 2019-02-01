@@ -72,7 +72,6 @@ router.delete(
     Quizz.findOneAndDelete({ _id: req.params.id })
       .then(() =>
         Quizz.find().then(quizz => {
-          console.log(quizz);
           res.json(quizz);
         })
       )

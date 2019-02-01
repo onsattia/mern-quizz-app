@@ -11,7 +11,7 @@ const Ressource = require("../models/Ressource");
 
 router.get(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Ressource.find()
       .then(ressources => res.json(ressources))
@@ -27,7 +27,7 @@ router.get(
 
 router.get(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Ressource.findById(req.params.id)
       .then(ressource => res.json(ressource))
@@ -62,7 +62,7 @@ router.post(
 
 router.put(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Ressource.findByIdAndUpdate({ _id: req.params.id }, req.body).then(
       ressource => {
@@ -80,12 +80,15 @@ router.put(
 
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log("req.params", req);
-    Ressource.findOneAndRemove({ _id: req.params.id }).then(() =>
-      res.json({ success: true })
-    );
+    Ressource.findOneAndDelete({ _id: req.params.id })
+      .then(() =>
+        Ressource.find().then(ressource => {
+          res.json(ressource);
+        })
+      )
+      .catch(err => res.status(404).json(err));
   }
 );
 

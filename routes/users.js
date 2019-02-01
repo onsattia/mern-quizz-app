@@ -115,15 +115,17 @@ router.post("/login", (req, res) => {
   });
 });
 
-// @route   DELETE api/profile
-// @desc    Delete user and profile
+// @route   DELETE api/:id
+// @desc    Delete user
 // @access  Private
 router.delete(
-  "/",
-  passport.authenticate("jwt", { session: false }),
+  "/:id",
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    User.findOneAndRemove({ _id: req.user.id }).then(() =>
-      res.json({ success: true })
+    User.findOneAndDelete({ _id: req.params.id }).then(() =>
+      User.find().then(user => {
+        res.json(user);
+      })
     );
   }
 );
