@@ -67,11 +67,16 @@ router.put(
 
 router.delete(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Quizz.findOneAndRemove({ _id: req.params.id }).then(() =>
-      res.json({ success: true })
-    );
+    Quizz.findOneAndDelete({ _id: req.params.id })
+      .then(() =>
+        Quizz.find().then(quizz => {
+          console.log(quizz);
+          res.json(quizz);
+        })
+      )
+      .catch(err => res.status(404).json(err));
   }
 );
 
