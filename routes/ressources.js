@@ -34,7 +34,7 @@ router.get(
       .catch(err =>
         res
           .status(404)
-          .json({ noressourcefound: "No ressource found with this ID" })
+          .json({ noRessourceFound: "No Ressource found with this ID" })
       );
   }
 );
@@ -64,7 +64,7 @@ router.put(
   "/:id",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Ressource.findByIdAndUpdate({ _id: req.params.id }, req.body).then(
+    Ressource.findOneAndReplace({ _id: req.params.id }, req.body).then(
       ressource => {
         Ressource.findOne({ _id: req.params.id }).then(ressource => {
           res.send(ressource);

@@ -20,10 +20,7 @@ const db = require("./config/keys").mongoURI;
 
 // Connect to MongoDB
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
@@ -42,5 +39,5 @@ app.use("/profile", profile);
 const port = process.env.PORT || 5000;
 // listen for requests
 app.listen(port, () => {
-  console.log(`Listenning on port ${port} ...`);
+  console.log(`Listenning on port ${port}...`);
 });

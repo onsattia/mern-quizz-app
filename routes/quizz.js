@@ -12,7 +12,7 @@ const Quizz = require("../models/Quizz");
 router.get("/", (req, res) => {
   Quizz.find()
     .then(quizz => res.json(quizz))
-    .catch(err => res.status(404).json({ noQuizzFound: "No quizz found" }));
+    .catch(err => res.status(404).json({ noQuizFound: "No quiz found" }));
 });
 
 // @route GET quizz/:id
@@ -23,7 +23,7 @@ router.get("/:id", (req, res) => {
   Quizz.findById(req.params.id)
     .then(quizz => res.json(quizz))
     .catch(err =>
-      res.status(404).json({ noquizzfound: "No quizz found with this ID" })
+      res.status(404).json({ noQuizFound: "No quiz found with this ID" })
     );
 });
 
@@ -51,9 +51,9 @@ router.post(
 
 router.put(
   "/:id",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Quizz.findByIdAndUpdate({ _id: req.params.id }, req.body).then(quizz => {
+    Quizz.findOneAndReplace({ _id: req.params.id }, req.body).then(() => {
       Quizz.findOne({ _id: req.params.id }).then(quizz => {
         res.send(quizz);
       });

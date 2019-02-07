@@ -6,8 +6,7 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const keys = require("../config/keys");
 
-// Load input valudation
-
+// Load input validation
 const validateRegisterInput = require("../validation/register");
 
 const User = require("../models/User");
@@ -22,21 +21,21 @@ router.get("/", (req, res) => {
     .catch(err => res.status(404).json({ noUserFound: "No user found" }));
 });
 
-// @route GET user/:id
+// @route GET users/:id
 // @desc  Get user by id
 // @access Private
 
-// router.get(
-//   "/:id",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     User.findById(req.params.id)
-//       .then(user => res.json(user))
-//       .catch(err =>
-//         res.status(404).json({ noUserFound: "No user found with this ID" })
-//       );
-//   }
-// );
+router.get(
+  "/:id",
+  // passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findById(req.params.id)
+      .then(user => res.json(user))
+      .catch(err =>
+        res.status(404).json({ noUserFound: "No user found with this ID" })
+      );
+  }
+);
 
 // @route POST users/register
 // @desc  Register user
@@ -115,7 +114,23 @@ router.post("/login", (req, res) => {
   });
 });
 
-// @route   DELETE api/:id
+// @route PUT users/edit/:id
+// @desc  Update quizz
+// @access Private
+
+router.put(
+  "/:id",
+  // passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findOneAndReplace({ _id: req.params.id }, req.body).then(() => {
+      User.findOne({ _id: req.params.id }).then(user => {
+        res.send(user);
+      });
+    });
+  }
+);
+
+// @route   DELETE users/:id
 // @desc    Delete user
 // @access  Private
 router.delete(
