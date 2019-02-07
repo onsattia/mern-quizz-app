@@ -8,6 +8,7 @@ const keys = require("../config/keys");
 
 // Load input validation
 const validateRegisterInput = require("../validation/register");
+const validateLoginInput = require("../validation/login");
 
 const User = require("../models/User");
 
@@ -43,9 +44,12 @@ router.get(
 
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
+
+  // Check Validation
   if (!isValid) {
     return res.status(400).json(errors);
   }
+
   User.findOne({ email: req.body.email }).then(user => {
     if (user) {
       return res.status(400).json({ email: "Email already exists" });
@@ -69,7 +73,7 @@ router.post("/register", (req, res) => {
           newUser
             .save()
             .then(user => res.json(user))
-            .catch(err => console.log(err));
+            .catch(err => res.send(err));
         });
       });
     }
@@ -81,13 +85,21 @@ router.post("/register", (req, res) => {
 // @access Public
 
 router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  // Check Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const email = req.body.email;
   const password = req.body.password;
 
   // Find user by email
   User.findOne({ email }).then(user => {
     if (!user) {
-      return res.status(404).json({ UserNotFoundError: "User not found" });
+      errors.email = "User not found";
+      return res.status(404).json(errors);
     }
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
@@ -106,9 +118,8 @@ router.post("/login", (req, res) => {
           }
         );
       } else {
-        return res
-          .status(400)
-          .json({ passwordError: "Password doesn't match" });
+        errors.password = "Password doesn't match";
+        return res.status(400).json(errors);
       }
     });
   });
