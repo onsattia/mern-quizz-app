@@ -6,7 +6,7 @@
   "scripts": {
     "client-install": "npm install --prefix client",
     "start": "node server.js",
-    "server": " killall node nodemon server.js",
+    "server": "nodemon server.js",
     "admin": "npm start --prefix admin",
     "dev": "concurrently - killall node \"npm run server\" \"npm run admin\""
   },

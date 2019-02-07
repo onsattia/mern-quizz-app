@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 
 const users = require("./routes/users");
-const quizz = require("./routes/quizz");
+const quizzes = require("./routes/quizzes");
 const ressources = require("./routes/ressources");
 const profile = require("./routes/profile");
 
@@ -31,7 +31,7 @@ require("./config/passport")(passport);
 
 // Use routes
 app.use("/users", users);
-app.use("/quizz", quizz);
+app.use("/quizzes", quizzes);
 app.use("/ressources", ressources);
 app.use("/profile", profile);
 

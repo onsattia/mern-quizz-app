@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+// Load validation
+const validateRessourceInput = require("../validation/ressource");
+
 const Ressource = require("../models/Ressource");
 
 // @route GET ressources/
@@ -47,6 +50,13 @@ router.post(
   "/",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateQuizInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     const newRessource = new Ressource({
       label: req.body.label,
       link: req.body.link
