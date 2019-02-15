@@ -50,7 +50,7 @@ router.post(
   "/",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { errors, isValid } = validateQuizInput(req.body);
+    const { errors, isValid } = validateRessourceInput(req.body);
 
     // Check Validation
     if (!isValid) {
@@ -74,6 +74,13 @@ router.put(
   "/:id",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateRessourceInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     Ressource.findOneAndReplace({ _id: req.params.id }, req.body).then(
       ressource => {
         Ressource.findOne({ _id: req.params.id }).then(ressource => {

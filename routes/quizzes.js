@@ -6,14 +6,14 @@ const passport = require("passport");
 // Load validation
 const validateQuizInput = require("../validation/quiz");
 
-const Quizzes = require("../models/Quiz");
+const Quiz = require("../models/Quiz");
 
 // @route GET quizzes/
 // @desc  Get all quizzes
 // @access Public
 
 router.get("/", (req, res) => {
-  Quizzes.find()
+  Quiz.find()
     .then(quizzes => res.json(quizzes))
     .catch(err => res.status(404).json({ noQuizFound: "No quiz found" }));
 });
