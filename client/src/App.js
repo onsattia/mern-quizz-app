@@ -4,10 +4,12 @@ import { Provider } from "react-redux";
 import jwt_decode from "jwt-decode";
 
 import setAuthToken from "./utils/setAuthToken";
-import { setCurrentUser } from "./store/actions/authActions";
+import { setCurrentUser, logoutUser } from "./store/actions/authActions";
 
 import store from "./store/store";
 
+import Landing from "./components/layout/Landing";
+import Navbar from "./components/layout/Navbar/Navbar";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 
@@ -18,9 +20,18 @@ if (localStorage.jwtToken) {
   // Set auth token header auth
   setAuthToken(localStorage.jwtToken);
   // Decode token
-  const deceded = jwt_decode(localStorage.jwtToken);
+  const decoded = jwt_decode(localStorage.jwtToken);
   // Set user
-  store.dispatch(setCurrentUser(deceded));
+  store.dispatch(setCurrentUser(decoded));
+
+  // Check for expired token
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp < currentTime) {
+    // Logout User
+    store.dispatch(logoutUser());
+    // Redirect to login
+    window.location.href = "/login";
+  }
 }
 
 class App extends Component {
@@ -28,9 +39,13 @@ class App extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <div className="container">
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
+          <div className="App">
+            <Navbar />
+            <Route exact path="/" component={Landing} />
+            <div className="container">
+              <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
+            </div>
           </div>
         </Router>
       </Provider>
