@@ -12,6 +12,7 @@ import Landing from "./components/layout/Landing";
 import Navbar from "./components/layout/Navbar/Navbar";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import Quizzes from "./components/Quizzes";
 
 import "./App.css";
 
@@ -43,6 +44,7 @@ class App extends Component {
             <Navbar />
             <Route exact path="/" component={Landing} />
             <div className="container">
+              <Route exact path="/quizzes" component={Quizzes} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
             </div>
