@@ -3,16 +3,20 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const QuizSchema = new Schema({
-  question: {
+  title: {
     type: String,
     required: true
   },
-  answers: {
+  description: {
     type: String,
     required: true
   },
-  points: {
-    type: Number,
+  track: {
+    type: String,
+    required: true
+  },
+  level: {
+    type: String,
     required: true
   }
 });

@@ -46,9 +46,10 @@ router.post(
     }
 
     const newQuiz = new Quiz({
-      question: req.body.question,
-      answers: req.body.answers,
-      points: req.body.points
+      title: req.body.title,
+      description: req.body.description,
+      track: req.body.track,
+      level: req.body.level
     });
 
     newQuiz
