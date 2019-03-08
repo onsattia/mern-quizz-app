@@ -2,11 +2,32 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
+const multer = require("multer");
 
 // Load validation
 const validateQuizInput = require("../validation/quiz");
 
 const Quiz = require("../models/Quiz");
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "./uploads");
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  // accept only jpeg & png files
+  if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // @route GET quizzes/
 // @desc  Get all quizzes
@@ -36,8 +57,11 @@ router.get("/:id", (req, res) => {
 
 router.post(
   "/",
+  upload.single("image"),
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    console.log("file  " + req.file.path);
+
     const { errors, isValid } = validateQuizInput(req.body);
 
     // Check Validation
@@ -49,7 +73,8 @@ router.post(
       title: req.body.title,
       description: req.body.description,
       track: req.body.track,
-      level: req.body.level
+      level: req.body.level,
+      image: req.file.path
     });
 
     newQuiz
@@ -65,7 +90,7 @@ router.post(
 
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Quiz.findOneAndReplace({ _id: req.params.id }, req.body).then(() => {
       Quiz.findOne({ _id: req.params.id }).then(quiz => {
@@ -81,7 +106,7 @@ router.put(
 
 router.delete(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Quiz.findOneAndDelete({ _id: req.params.id })
       .then(() =>

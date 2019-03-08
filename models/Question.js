@@ -1,16 +1,27 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-// Create Schema
-const QuestionSchema = new Schema({
+const ResponseSchema = new Schema({
   title: {
     type: String,
     required: true
   },
-  response: {
+  isTrue: {
+    type: Boolean
+    // required: true
+  }
+});
+
+const QuestionSchema = new Schema({
+  quiz: {
     type: Schema.Types.ObjectId,
-    ref: "responses"
+    ref: "quizzes"
   },
+  title: {
+    type: String,
+    required: true
+  },
+  response: [ResponseSchema],
   score: {
     type: Number,
     required: true

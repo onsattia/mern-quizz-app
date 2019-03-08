@@ -12,13 +12,18 @@ const ProfileSchema = new Schema({
     required: true,
     max: 40
   },
-  location: {
-    type: String
+  status: {
+    type: String,
+    required: true
+  },
+  skills: {
+    type: [String],
+    required: true
   },
   bio: {
     type: String
   },
-  data: {
+  date: {
     type: Date,
     default: Date.now
   }

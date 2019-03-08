@@ -1,21 +1,22 @@
 import React from "react";
 
-function QuizCard(props) {
+const QuizCard = props => {
   return (
     <div className="col-md-6 col-lg-4 my-4">
-      <div className="card">
+      <div className="card" style={{ height: "350px" }}>
         <img
-          src={require("../assets/img/html.png")}
+          src={props.image}
           className="card-img-top img-fluid"
-          alt="HTML5"
+          alt={props.title}
+          style={{ height: "200px", width: "315" }}
         />
         <div className="card-body">
           <h3 className="card-title">{props.title}</h3>
-          <p className="card-text">{props.body}</p>
+          <p className="card-text">{props.description}</p>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default QuizCard;

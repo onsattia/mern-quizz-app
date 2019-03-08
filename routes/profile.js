@@ -8,7 +8,7 @@ const Profile = require("../models/Profile");
 // Load User Model
 const User = require("../models/User");
 
-// @route GET profile
+// @route GET /profile
 // @desc  GET current user profile
 // @access Private
 router.get(
@@ -28,7 +28,7 @@ router.get(
   }
 );
 
-// @route POST profile
+// @route POST /profile
 // @desc  Create/Update user profile
 // @access Private
 router.post(
@@ -68,7 +68,7 @@ router.post(
   }
 );
 
-// @route   DELETE profiles
+// @route   DELETE /profiles
 // @desc    Delete user and profile
 // @access  Private
 

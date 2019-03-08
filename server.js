@@ -7,10 +7,12 @@ const users = require("./routes/users");
 const quizzes = require("./routes/quizzes");
 const ressources = require("./routes/ressources");
 const profile = require("./routes/profile");
+const questions = require("./routes/questions");
 
 // Set up express app
 const app = express();
 
+app.use("/uploads", express.static("uploads"));
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -34,6 +36,7 @@ app.use("/users", users);
 app.use("/quizzes", quizzes);
 app.use("/ressources", ressources);
 app.use("/profile", profile);
+app.use("/questions", questions);
 
 //port number
 const port = process.env.PORT || 5000;
