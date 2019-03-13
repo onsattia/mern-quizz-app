@@ -92,7 +92,7 @@ router.put(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Quiz.findOneAndReplace({ _id: req.params.id }, req.body).then(() => {
+    Quiz.findByIdAndUpdate({ _id: req.params.id }, req.body).then(() => {
       Quiz.findOne({ _id: req.params.id }).then(quiz => {
         res.send(quiz);
       });

@@ -133,7 +133,7 @@ router.put(
   "/:id",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    User.findOneAndReplace({ _id: req.params.id }, req.body).then(() => {
+    User.findOneAndUpdate({ _id: req.params.id }, req.body).then(() => {
       User.findOne({ _id: req.params.id }).then(user => {
         res.send(user);
       });

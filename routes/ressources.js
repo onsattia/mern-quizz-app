@@ -81,7 +81,7 @@ router.put(
       return res.status(400).json(errors);
     }
 
-    Ressource.findOneAndReplace({ _id: req.params.id }, req.body).then(
+    Ressource.findOneAndUpdate({ _id: req.params.id }, req.body).then(
       ressource => {
         Ressource.findOne({ _id: req.params.id }).then(ressource => {
           res.send(ressource);

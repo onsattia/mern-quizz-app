@@ -1,20 +1,29 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getQuizzes } from "../store/actions/quizActions";
-import Spinner from "../components/common/Spinner";
 
+import { getQuizzes, filterByTrack } from "../store/actions/quizActions";
+import { getTracks } from "../store/actions/trackActions";
+
+import Spinner from "../components/common/Spinner";
 import QuizCard from "./QuizCard";
 
 class Quizzes extends Component {
   componentDidMount() {
     this.props.getQuizzes();
+    this.props.getTracks();
+  }
+
+  onFilter(id) {
+    console.log(id);
+    this.props.filterByTrack(id);
   }
 
   render() {
     const { quizzes, loading } = this.props.quizzes;
-    let quizzContent;
+    const { tracks, loadingTracks } = this.props.tracks;
+
+    let quizzContent, trackNames;
     let spinner;
     if (quizzes === null || loading) {
       spinner = <Spinner />;
@@ -31,22 +40,27 @@ class Quizzes extends Component {
         );
       });
     }
+    if (tracks === null || loadingTracks) {
+      spinner = <Spinner />;
+    } else {
+      trackNames = tracks.map(track => {
+        return (
+          <button
+            key={track._id}
+            className="btn btn-outline-dark m-1"
+            onClick={this.onFilter.bind(this, track._id)}
+            size="sm"
+          >
+            {track.name}
+          </button>
+        );
+      });
+    }
 
     return (
       <div className="container">
         <nav className="nav justify-content-center nav-pills flex-column flex-md-row">
-          <Link to="#" className="btn btn-outline-dark mr-2">
-            Algorithme
-          </Link>
-          <Link to="#" className="btn btn-outline-dark mr-2">
-            Web Development
-          </Link>
-          <Link to="#" className="btn btn-outline-dark mr-2">
-            Mobile Development
-          </Link>
-          <Link to="#" className="btn btn-outline-dark mr-2">
-            Data Science
-          </Link>
+          {trackNames}
         </nav>
         <div className="row">{quizzContent}</div>
         {spinner}
@@ -57,14 +71,16 @@ class Quizzes extends Component {
 
 Quizzes.propTypes = {
   getQuizzes: PropTypes.func.isRequired,
+  getTracks: PropTypes.func.isRequired,
   quizzes: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  quizzes: state.quizzes
+  quizzes: state.quizzes,
+  tracks: state.tracks
 });
 
 export default connect(
   mapStateToProps,
-  { getQuizzes }
+  { getQuizzes, getTracks, filterByTrack }
 )(Quizzes);

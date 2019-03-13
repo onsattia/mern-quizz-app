@@ -8,6 +8,7 @@ const quizzes = require("./routes/quizzes");
 const ressources = require("./routes/ressources");
 const profile = require("./routes/profile");
 const questions = require("./routes/questions");
+const tracks = require("./routes/tracks");
 
 // Set up express app
 const app = express();
@@ -37,6 +38,7 @@ app.use("/quizzes", quizzes);
 app.use("/ressources", ressources);
 app.use("/profile", profile);
 app.use("/questions", questions);
+app.use("/tracks", tracks);
 
 //port number
 const port = process.env.PORT || 5000;

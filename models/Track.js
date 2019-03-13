@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const TrackSchema = new Schema({
-  title: {
+  name: {
     type: String,
     required: true
   }

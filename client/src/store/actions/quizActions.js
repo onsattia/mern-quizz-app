@@ -20,6 +20,24 @@ export const getQuizzes = () => dispatch => {
     );
 };
 
+// Get Quizzes By Track
+export const filterByTrack = id => dispatch => {
+  dispatch(loading);
+  axios
+    .get(`/tracks/quiz/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_QUIZZES,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 // Loading
 export const loading = () => {
   return {
