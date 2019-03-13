@@ -7,7 +7,7 @@ module.exports = function validateTrackInput(data) {
   data.name = !isEmpty(data.name) ? data.name : "";
 
   if (Validator.isEmpty(data.name)) {
-    errors.label = "Name field is required";
+    errors.name = "Name field is required";
   }
 
   return {

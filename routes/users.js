@@ -9,6 +9,7 @@ const keys = require("../config/keys");
 // Load validation
 const validateRegisterInput = require("../validation/register");
 const validateLoginInput = require("../validation/login");
+const validateUserInput = require("../validation/user");
 
 const User = require("../models/User");
 
@@ -62,6 +63,7 @@ router.post("/register", (req, res) => {
       const newUser = new User({
         name: req.body.name,
         email: req.body.email,
+        role: req.body.role,
         password: req.body.password,
         avatar
       });
@@ -133,6 +135,13 @@ router.put(
   "/:id",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateUserInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
     User.findOneAndUpdate({ _id: req.params.id }, req.body).then(() => {
       User.findOne({ _id: req.params.id }).then(user => {
         res.send(user);

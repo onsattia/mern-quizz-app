@@ -14,7 +14,7 @@ const Ressource = require("../models/Ressource");
 
 router.get(
   "/",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Ressource.find()
       .then(ressources => res.json(ressources))
@@ -30,7 +30,7 @@ router.get(
 
 router.get(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Ressource.findById(req.params.id)
       .then(ressource => res.json(ressource))
@@ -48,7 +48,7 @@ router.get(
 
 router.post(
   "/",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateRessourceInput(req.body);
 
@@ -72,7 +72,7 @@ router.post(
 
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateRessourceInput(req.body);
 
@@ -97,7 +97,7 @@ router.put(
 
 router.delete(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Ressource.findOneAndDelete({ _id: req.params.id })
       .then(() =>
