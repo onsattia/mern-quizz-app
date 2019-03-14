@@ -8,6 +8,7 @@ const multer = require("multer");
 const validateQuizInput = require("../validation/quiz");
 
 const Quiz = require("../models/Quiz");
+const Question = require("../models/Question");
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -115,9 +116,11 @@ router.delete(
   (req, res) => {
     Quiz.findOneAndDelete({ _id: req.params.id })
       .then(() =>
-        Quiz.find().then(quizzes => {
-          res.json(quizzes);
-        })
+        Question.findOneAndDelete({ quiz: req.params.id }).then(() =>
+          Quiz.find().then(quizzes => {
+            res.json(quizzes);
+          })
+        )
       )
       .catch(err => res.status(404).json(err));
   }

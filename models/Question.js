@@ -6,9 +6,9 @@ const ResponseSchema = new Schema({
     type: String,
     required: true
   },
-  isTrue: {
-    type: Boolean
-    // required: true
+  status: {
+    type: String,
+    required: true
   }
 });
 
