@@ -24,7 +24,7 @@ export const getQuizzes = () => dispatch => {
 export const filterByTrack = id => dispatch => {
   dispatch(loading);
   axios
-    .get(`/tracks/quiz/${id}`)
+    .get(`/tracks/quizzes/${id}`)
     .then(res =>
       dispatch({
         type: GET_QUIZZES,

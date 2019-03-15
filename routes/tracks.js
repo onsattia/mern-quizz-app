@@ -9,13 +9,13 @@ const validateTrackInput = require("../validation/track");
 const Track = require("../models/Track");
 const Quiz = require("../models/Quiz");
 
-// @route GET tracks/
+// @route GET /tracks
 // @desc  Get all Tracks
 // @access Private
 
 router.get(
   "/",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Track.find()
       .then(tracks => res.json(tracks))
@@ -23,13 +23,13 @@ router.get(
   }
 );
 
-// @route GET tracks/:id
+// @route GET /tracks/:id
 // @desc  Get Track by id
 // @access Private
 
 router.get(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Track.findById(req.params.id)
       .then(track => res.json(track))
@@ -37,13 +37,13 @@ router.get(
   }
 );
 
-// @route GET tracks/quiz/:id
-// @desc  Get Quiz by Track
+// @route GET /tracks/quiz/:id
+// @desc  Get Quizzes by Track
 // @access Private
 
 router.get(
-  "/quiz/:id",
-  // passport.authenticate("jwt", { session: false }),
+  "/quizzes/:id",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Track.findById(req.params.id)
       .then(track =>
@@ -55,13 +55,13 @@ router.get(
   }
 );
 
-// @route POST tracks/
+// @route POST /tracks
 // @desc  Create track
 // @access Private
 
 router.post(
   "/",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateTrackInput(req.body);
 
@@ -78,13 +78,13 @@ router.post(
   }
 );
 
-// @route PUT tracks/:id
+// @route PUT /tracks/:id
 // @desc  Update track
 // @access Private
 
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateTrackInput(req.body);
 
@@ -101,13 +101,13 @@ router.put(
   }
 );
 
-// @route DELETE tracks/:id
-// @desc  delete track
+// @route DELETE /tracks/:id
+// @desc  Delete track
 // @access Private
 
 router.delete(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Track.findOneAndDelete({ _id: req.params.id })
       .then(() =>

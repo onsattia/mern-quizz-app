@@ -30,36 +30,44 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-// @route GET quizzes/
+// @route GET /quizzes
 // @desc  Get all quizzes
-// @access Public
+// @access Private
 
-router.get("/", (req, res) => {
-  Quiz.find()
-    .then(quizzes => res.json(quizzes))
-    .catch(err => res.status(404).json({ noQuizFound: "No quiz found" }));
-});
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Quiz.find()
+      .then(quizzes => res.json(quizzes))
+      .catch(err => res.status(404).json({ noQuizFound: "No quiz found" }));
+  }
+);
 
-// @route GET quizzes/:id
+// @route GET /quizzes/:id
 // @desc  Get quiz by id
-// @access Public
+// @access Private
 
-router.get("/:id", (req, res) => {
-  Quiz.findById(req.params.id)
-    .then(quiz => res.json(quiz))
-    .catch(err =>
-      res.status(404).json({ noQuizFound: "No quiz found with this ID" })
-    );
-});
+router.get(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Quiz.findById(req.params.id)
+      .then(quiz => res.json(quiz))
+      .catch(err =>
+        res.status(404).json({ noQuizFound: "No quiz found with this ID" })
+      );
+  }
+);
 
-// @route POST quizzes/
+// @route POST /quizzes
 // @desc  Create quiz
 // @access Private
 
 router.post(
   "/",
   upload.single("image"),
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateQuizInput(req.body);
 
@@ -83,7 +91,7 @@ router.post(
   }
 );
 
-// @route PUT quizzes/:id
+// @route PUT /quizzes/:id
 // @desc  Update quiz
 // @access Private
 
@@ -106,8 +114,8 @@ router.put(
   }
 );
 
-// @route DELETE quizzes/:id
-// @desc  delete quiz
+// @route DELETE /quizzes/:id
+// @desc  Delete quiz
 // @access Private
 
 router.delete(

@@ -23,7 +23,7 @@ const QuestionSchema = new Schema({
   },
   response: [ResponseSchema],
   score: {
-    type: Number,
+    type: String,
     required: true
   }
 });

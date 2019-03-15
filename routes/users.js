@@ -13,23 +13,27 @@ const validateUserInput = require("../validation/user");
 
 const User = require("../models/User");
 
-// @route GET users/
-// @desc get all users
+// @route GET /users
+// @desc Get all users
 // @access Private
 
-router.get("/", (req, res) => {
-  User.find()
-    .then(user => res.json(user))
-    .catch(err => res.status(404).json({ noUserFound: "No user found" }));
-});
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.find()
+      .then(user => res.json(user))
+      .catch(err => res.status(404).json({ noUserFound: "No user found" }));
+  }
+);
 
-// @route GET users/:id
+// @route GET /users/:id
 // @desc  Get user by id
 // @access Private
 
 router.get(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     User.findById(req.params.id)
       .then(user => res.json(user))
@@ -39,7 +43,7 @@ router.get(
   }
 );
 
-// @route POST users/register
+// @route POST /users/register
 // @desc  Register user
 // @access Public
 
@@ -82,7 +86,7 @@ router.post("/register", (req, res) => {
   });
 });
 
-// @route POST users/login
+// @route POST /users/login
 // @desc  Login user && returning JWT Token
 // @access Public
 
@@ -127,13 +131,13 @@ router.post("/login", (req, res) => {
   });
 });
 
-// @route PUT users/edit/:id
-// @desc  Update quizz
+// @route PUT /users/edit/:id
+// @desc  Update user
 // @access Private
 
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateUserInput(req.body);
 
@@ -150,12 +154,12 @@ router.put(
   }
 );
 
-// @route   DELETE users/:id
+// @route   DELETE /users/:id
 // @desc    Delete user
 // @access  Private
 router.delete(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     User.findOneAndDelete({ _id: req.params.id }).then(() =>
       User.find().then(user => {

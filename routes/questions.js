@@ -11,12 +11,12 @@ const Quiz = require("../models/Quiz");
 const Question = require("../models/Question");
 
 // @route GET /questions/:quizId
-// @desc  get question by quizId
+// @desc  Get question by quizId
 // @access Private
 
 router.get(
   "/:quizId",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Quiz.findOne({ _id: req.params.quizId })
       .then(quiz => {
@@ -28,22 +28,38 @@ router.get(
   }
 );
 
-// @route GET /questions/responses/:QId
-// @desc  get responses of question with QId
+// @route GET /questions/question/:qstId
+// @desc  Get question by qstId
 // @access Private
 
 router.get(
-  "/responses/:QId",
-  // passport.authenticate("jwt", { session: false }),
+  "/question/:qstId",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Question.findOne({ _id: req.params.QId })
+    Question.findById(req.params.qstId)
+      .then(question => res.json(question))
+      .catch(err =>
+        res.status(404).json({ noQuestionFound: "No question found" })
+      );
+  }
+);
+
+// @route GET /questions/responses/:QId
+// @desc  Get responses of question with qId
+// @access Private
+
+router.get(
+  "/responses/:qId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Question.findOne({ _id: req.params.qId })
       .then(question => res.json(question.response))
       .catch(err => res.json(err));
   }
 );
 
 // @route POST /questions/:quizId
-// @desc  add question to quiz
+// @desc  Add question to quiz
 // @access Private
 
 router.post(
@@ -73,13 +89,13 @@ router.post(
   }
 );
 
-// @route POST questions/response/:questionId
-// @desc  add response to questionId
+// @route POST /questions/response/:questionId
+// @desc  Add response to question
 // @access Private
 
 router.post(
   "/response/:questionId",
-  //   passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateResponseInput(req.body);
 
@@ -94,7 +110,7 @@ router.post(
           title: req.body.title,
           status: req.body.status
         };
-        // Add to responses array
+        // Add to response array
         question.response.push(newResponse);
         question
           .save()
@@ -105,13 +121,13 @@ router.post(
   }
 );
 
-// @route PUT questions/:id
+// @route PUT /questions/:id
 // @desc  Update question
 // @access Private
 
 router.put(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateQuestionInput(req.body);
 
@@ -128,13 +144,13 @@ router.put(
   }
 );
 
-// @route DELETE questions/:id
-// @desc  delete question
+// @route DELETE /questions/:id
+// @desc  Delete question
 // @access Private
 
 router.delete(
   "/:id",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Question.findOneAndDelete({ _id: req.params.id })
       .then(() =>
@@ -146,29 +162,29 @@ router.delete(
   }
 );
 
-// @route DELETE questions/response/:id
-// @desc  delete response
+// @route DELETE /questions/response/:id
+// @desc  Delete response
 // @access Private
 
-router.delete(
-  "/response/:id",
-  // passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Question.findOne({ "response._id": req.params.id })
-      .then(question => {
-        // Question.find().then(question => {
-        //   res.json(question);
-        // })
-        // Add to responses array
-        console.log(question.response);
-        // question.response.push(newResponse);
-        // question
-        //   .save()
-        //   .then(question => res.json(question))
-        //   .catch(err => res.json(err));
-      })
-      .catch(err => res.status(404).json(err));
-  }
-);
+// router.delete(
+//   "/response/:id",
+//   // passport.authenticate("jwt", { session: false }),
+//   (req, res) => {
+//     Question.findOne({ "response._id": req.params.id })
+//       .then(question => {
+//         // Question.find().then(question => {
+//         //   res.json(question);
+//         // })
+//         // Add to responses array
+//         console.log(question.response);
+//         // question.response.push(newResponse);
+//         // question
+//         //   .save()
+//         //   .then(question => res.json(question))
+//         //   .catch(err => res.json(err));
+//       })
+//       .catch(err => res.status(404).json(err));
+//   }
+// );
 
 module.exports = router;

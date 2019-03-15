@@ -8,7 +8,7 @@ const validateRessourceInput = require("../validation/ressource");
 
 const Ressource = require("../models/Ressource");
 
-// @route GET ressources/
+// @route GET /ressources
 // @desc  Get all ressources
 // @access Private
 
@@ -24,7 +24,7 @@ router.get(
   }
 );
 
-// @route GET ressources/:id
+// @route GET /ressources/:id
 // @desc  Get ressource by id
 // @access Private
 
@@ -42,7 +42,7 @@ router.get(
   }
 );
 
-// @route POST ressources/
+// @route POST /ressources
 // @desc  Create ressource
 // @access Private
 
@@ -66,7 +66,7 @@ router.post(
   }
 );
 
-// @route PUT ressources/:id
+// @route PUT /ressources/:id
 // @desc  Update ressource
 // @access Private
 
@@ -91,8 +91,8 @@ router.put(
   }
 );
 
-// @route DELETE ressources/:id
-// @desc  delete ressource
+// @route DELETE /ressources/:id
+// @desc  Delete ressource
 // @access Private
 
 router.delete(
