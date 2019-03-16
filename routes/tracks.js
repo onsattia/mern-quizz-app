@@ -11,49 +11,37 @@ const Quiz = require("../models/Quiz");
 
 // @route GET /tracks
 // @desc  Get all Tracks
-// @access Private
+// @access Public
 
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Track.find()
-      .then(tracks => res.json(tracks))
-      .catch(err => res.status(404).json({ noTrackFound: "No track found" }));
-  }
-);
+router.get("/", (req, res) => {
+  Track.find()
+    .then(tracks => res.json(tracks))
+    .catch(err => res.status(404).json({ noTrackFound: "No track found" }));
+});
 
 // @route GET /tracks/:id
 // @desc  Get Track by id
-// @access Private
+// @access Public
 
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Track.findById(req.params.id)
-      .then(track => res.json(track))
-      .catch(err => res.status(404).json({ noTrackFound: "No track found" }));
-  }
-);
+router.get("/:id", (req, res) => {
+  Track.findById(req.params.id)
+    .then(track => res.json(track))
+    .catch(err => res.status(404).json({ noTrackFound: "No track found" }));
+});
 
 // @route GET /tracks/quiz/:id
 // @desc  Get Quizzes by Track
-// @access Private
+// @access Public
 
-router.get(
-  "/quizzes/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Track.findById(req.params.id)
-      .then(track =>
-        Quiz.find({ track: track.name }).then(quizzes => {
-          res.json(quizzes);
-        })
-      )
-      .catch(err => res.status(404).json({ noTrackFound: "No track found" }));
-  }
-);
+router.get("/quizzes/:id", (req, res) => {
+  Track.findById(req.params.id)
+    .then(track =>
+      Quiz.find({ track: track.name }).then(quizzes => {
+        res.json(quizzes);
+      })
+    )
+    .catch(err => res.status(404).json({ noTrackFound: "No track found" }));
+});
 
 // @route POST /tracks
 // @desc  Create track

@@ -95,7 +95,7 @@ router.post(
 
 router.post(
   "/response/:questionId",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateResponseInput(req.body);
 
@@ -162,29 +162,60 @@ router.delete(
   }
 );
 
+// @route PUT /questions/response/:qstId
+// @desc  Update response of the question with the id :qstId
+// @access Private
+
+router.put(
+  "/response/:idRes",
+  // passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    // const { errors, isValid } = validateQuestionInput(req.body);
+
+    // // Check Validation
+    // if (!isValid) {
+    //   return res.status(400).json(errors);
+    // }
+    Question.findOneAndUpdate(
+      { "response._id": req.params.idRes },
+      {
+        $set: {
+          "response.$.title": req.body.title,
+          "response.$.status": req.body.status
+        }
+      }
+    )
+      .then(() => {
+        Question.findOne({ "response._id": req.params.idRes }).then(
+          question => {
+            res.send(question);
+          }
+        );
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
 // @route DELETE /questions/response/:id
 // @desc  Delete response
 // @access Private
 
-// router.delete(
-//   "/response/:id",
-//   // passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     Question.findOne({ "response._id": req.params.id })
-//       .then(question => {
-//         // Question.find().then(question => {
-//         //   res.json(question);
-//         // })
-//         // Add to responses array
-//         console.log(question.response);
-//         // question.response.push(newResponse);
-//         // question
-//         //   .save()
-//         //   .then(question => res.json(question))
-//         //   .catch(err => res.json(err));
-//       })
-//       .catch(err => res.status(404).json(err));
-//   }
-// );
+router.delete(
+  "/response/:idRes",
+  // passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Question.findOne({ "response._id": req.params.idRes })
+      .then(question => {
+        question.response.splice(1, 1);
+
+        Question.findOne({ "response._id": req.params.idRes }).then(
+          question => {
+            res.send(question);
+          }
+        );
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
 
 module.exports = router;

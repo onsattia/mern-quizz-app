@@ -32,33 +32,25 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 // @route GET /quizzes
 // @desc  Get all quizzes
-// @access Private
+// @access Public
 
-router.get(
-  "/",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Quiz.find()
-      .then(quizzes => res.json(quizzes))
-      .catch(err => res.status(404).json({ noQuizFound: "No quiz found" }));
-  }
-);
+router.get("/", (req, res) => {
+  Quiz.find()
+    .then(quizzes => res.json(quizzes))
+    .catch(err => res.status(404).json({ noQuizFound: "No quiz found" }));
+});
 
 // @route GET /quizzes/:id
 // @desc  Get quiz by id
-// @access Private
+// @access Public
 
-router.get(
-  "/:id",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Quiz.findById(req.params.id)
-      .then(quiz => res.json(quiz))
-      .catch(err =>
-        res.status(404).json({ noQuizFound: "No quiz found with this ID" })
-      );
-  }
-);
+router.get("/:id", (req, res) => {
+  Quiz.findById(req.params.id)
+    .then(quiz => res.json(quiz))
+    .catch(err =>
+      res.status(404).json({ noQuizFound: "No quiz found with this ID" })
+    );
+});
 
 // @route POST /quizzes
 // @desc  Create quiz
