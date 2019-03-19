@@ -44,15 +44,15 @@ router.get(
   }
 );
 
-// @route GET /questions/responses/:QId
-// @desc  Get responses of question with qId
+// @route GET /questions/responses/:qstId
+// @desc  Get responses of question with qstId
 // @access Private
 
 router.get(
-  "/responses/:qId",
+  "/responses/:qstId",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Question.findOne({ _id: req.params.qId })
+    Question.findOne({ _id: req.params.qstId })
       .then(question => res.json(question.response))
       .catch(err => res.json(err));
   }
@@ -89,12 +89,12 @@ router.post(
   }
 );
 
-// @route POST /questions/response/:questionId
+// @route POST /questions/response/:qstId
 // @desc  Add response to question
 // @access Private
 
 router.post(
-  "/response/:questionId",
+  "/response/:qstId",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateResponseInput(req.body);
@@ -104,7 +104,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Question.findById(req.params.questionId)
+    Question.findById(req.params.qstId)
       .then(question => {
         const newResponse = {
           title: req.body.title,
@@ -162,12 +162,12 @@ router.delete(
   }
 );
 
-// @route PUT /questions/response/:qstId
-// @desc  Update response of the question with the id :qstId
+// @route PUT /questions/response/:resId
+// @desc  Update response of the question with the id :resId
 // @access Private
 
 router.put(
-  "/response/:idRes",
+  "/response/:resId",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     // const { errors, isValid } = validateQuestionInput(req.body);
@@ -177,7 +177,7 @@ router.put(
     //   return res.status(400).json(errors);
     // }
     Question.findOneAndUpdate(
-      { "response._id": req.params.idRes },
+      { "response._id": req.params.resId },
       {
         $set: {
           "response.$.title": req.body.title,
@@ -186,7 +186,7 @@ router.put(
       }
     )
       .then(() => {
-        Question.findOne({ "response._id": req.params.idRes }).then(
+        Question.findOne({ "response._id": req.params.resId }).then(
           question => {
             res.send(question);
           }
@@ -201,18 +201,17 @@ router.put(
 // @access Private
 
 router.delete(
-  "/response/:idRes",
+  "/response/:resId",
   // passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Question.findOne({ "response._id": req.params.idRes })
-      .then(question => {
-        question.response.splice(1, 1);
-
-        Question.findOne({ "response._id": req.params.idRes }).then(
-          question => {
-            res.send(question);
-          }
-        );
+    Question.findOneAndUpdate(
+      { "response._id": req.params.resId },
+      { $pull: { response: { _id: req.params.resId } } }
+    )
+      .then(() => {
+        Question.find().then(questions => {
+          res.send(questions);
+        });
       })
       .catch(err => res.status(404).json(err));
   }
