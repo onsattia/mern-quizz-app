@@ -60,6 +60,13 @@ class Quizzes extends Component {
     return (
       <div className="container">
         <nav className="nav justify-content-center nav-pills flex-column flex-md-row">
+          <button
+            className="btn btn-outline-dark m-1"
+            onClick={this.props.getQuizzes.bind(this)}
+            size="sm"
+          >
+            See All
+          </button>
           {trackNames}
         </nav>
         <div className="row">{quizzContent}</div>
