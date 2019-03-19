@@ -53,7 +53,30 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Question.findOne({ _id: req.params.qstId })
-      .then(question => res.json(question.response))
+      .then(question =>
+        res.json({ responses: question.response, quizId: question.quiz })
+      )
+      .catch(err =>
+        res.status(404).json({ noQuestionFound: "No question found" })
+      );
+  }
+);
+
+// @route GET /questions/response/:resId
+// @desc  Get response of question with resId
+// @access Private
+
+router.get(
+  "/response/:resId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Question.findOne({ "response._id": req.params.resId })
+      .then(question => {
+        let response = question.response.find(
+          res => res._id == req.params.resId
+        );
+        res.json({ response: response, qstId: question._id });
+      })
       .catch(err => res.json(err));
   }
 );
@@ -95,7 +118,7 @@ router.post(
 
 router.post(
   "/response/:qstId",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateResponseInput(req.body);
 
@@ -168,14 +191,14 @@ router.delete(
 
 router.put(
   "/response/:resId",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    // const { errors, isValid } = validateQuestionInput(req.body);
+    const { errors, isValid } = validateResponseInput(req.body);
 
-    // // Check Validation
-    // if (!isValid) {
-    //   return res.status(400).json(errors);
-    // }
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
     Question.findOneAndUpdate(
       { "response._id": req.params.resId },
       {
@@ -201,17 +224,19 @@ router.put(
 // @access Private
 
 router.delete(
-  "/response/:resId",
-  // passport.authenticate("jwt", { session: false }),
+  "/response/:resId/:qstId",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Question.findOneAndUpdate(
       { "response._id": req.params.resId },
       { $pull: { response: { _id: req.params.resId } } }
     )
       .then(() => {
-        Question.find().then(questions => {
-          res.send(questions);
-        });
+        Question.findOne({ _id: req.params.qstId })
+          .then(question =>
+            res.json({ responses: question.response, quizId: question.quiz })
+          )
+          .catch(err => res.json(err));
       })
       .catch(err => res.status(404).json(err));
   }
