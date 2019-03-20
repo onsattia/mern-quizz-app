@@ -12,6 +12,12 @@ const ProfileSchema = new Schema({
     required: true,
     max: 40
   },
+  website: {
+    type: String
+  },
+  location: {
+    type: String
+  },
   status: {
     type: String,
     required: true
@@ -22,6 +28,26 @@ const ProfileSchema = new Schema({
   },
   bio: {
     type: String
+  },
+  githubusername: {
+    type: String
+  },
+  social: {
+    youtube: {
+      type: String
+    },
+    twitter: {
+      type: String
+    },
+    facebook: {
+      type: String
+    },
+    linkedin: {
+      type: String
+    },
+    instagram: {
+      type: String
+    }
   },
   date: {
     type: Date,
