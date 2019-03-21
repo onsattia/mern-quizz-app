@@ -2,16 +2,25 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { getCurrentProfile } from "../../store/actions/profileActions";
+import {
+  getCurrentProfile,
+  deleteAccount
+} from "../../store/actions/profileActions";
 
+import ProfileHeader from "../profile/ProfileHeader";
+import DashboardInfo from "./DashboardInfo";
 import Spinner from "../common/Spinner";
 
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getCurrentProfile();
   }
+
+  onDeleteClick(e) {
+    this.props.deleteAccount();
+  }
+
   render() {
-    const { user } = this.props.auth;
     const { profile, loading } = this.props.profile;
 
     let dashboardContent;
@@ -21,14 +30,26 @@ class Dashboard extends Component {
     } else {
       // Check if logged in user has a profile
       if (Object.keys(profile).length > 0) {
-        dashboardContent = <h1>Display profile</h1>;
+        // console.log(profile.)
+        dashboardContent = (
+          <div className="row">
+            <div className="col-md-4">
+              <ProfileHeader profile={profile} />
+            </div>
+            <div className="col-md-8">
+              <DashboardInfo />
+            </div>
+          </div>
+        );
       } else {
         dashboardContent = (
-          <div>
-            <p className="lead text-muted">Welcome {user.name}</p>
-            <Link to="/create-profile" className="btn btn-lg btn-info">
-              Create Profile
-            </Link>
+          <div className="row">
+            <div className="alert alert-primary" role="alert">
+              <Link to="/edit-profile" className="alert-link">
+                Click Here,
+              </Link>
+              To Complete Your Profile!
+            </div>
           </div>
         );
       }
@@ -36,29 +57,22 @@ class Dashboard extends Component {
 
     return (
       <div className="dashboard">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="display-4">{dashboardContent}</div>
-            </div>
-          </div>
-        </div>
+        <div className="container">{dashboardContent}</div>
       </div>
     );
   }
 }
 Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
-  auth: state.auth
+  profile: state.profile
 });
 
 export default connect(
   mapStateToProps,
-  { getCurrentProfile }
+  { getCurrentProfile, deleteAccount }
 )(Dashboard);

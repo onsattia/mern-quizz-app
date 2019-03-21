@@ -3,7 +3,7 @@ import React from "react";
 const QuizCard = props => {
   return (
     <div className="col-md-6 col-lg-4 my-4">
-      <div className="card" style={{ height: "350px" }}>
+      <div className="card shadow-sm" style={{ height: "350px" }}>
         <img
           src={props.image}
           className="card-img-top img-fluid"

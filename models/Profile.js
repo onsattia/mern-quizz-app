@@ -49,6 +49,12 @@ const ProfileSchema = new Schema({
       type: String
     }
   },
+  // activesubscribedQuiz : {
+
+  // },
+  // subscribedQuiz :{
+
+  // },
   date: {
     type: Date,
     default: Date.now
