@@ -3,6 +3,7 @@ import authReducer from "./authReducer";
 import quizReducer from "./quizReducer";
 import trackReducer from "./trackReducer";
 import profileReducer from "./profileReducer";
+import accountReducer from "./accountReducer";
 import errorReducer from "./errorReducer";
 
 export default combineReducers({
@@ -10,5 +11,6 @@ export default combineReducers({
   errors: errorReducer,
   quizzes: quizReducer,
   tracks: trackReducer,
-  profile: profileReducer
+  profile: profileReducer,
+  accountCredentials: accountReducer
 });

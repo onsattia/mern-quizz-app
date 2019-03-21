@@ -43,6 +43,27 @@ router.get(
   }
 );
 
+// @route GET /users
+// @desc  GET current user
+// @access Private
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    User.findOne({ user: req.user._id })
+      .then(user => {
+        if (!user) {
+          errors.nouser = "There is no user for this user";
+          return res.status(404).json(errors);
+        }
+        res.json(user);
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
 // @route POST /users/register
 // @desc  Register user
 // @access Public
@@ -111,7 +132,14 @@ router.post("/login", (req, res) => {
       if (isMatch) {
         // Sign token
         jwt.sign(
-          { id: user.id, name: user.name },
+          {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            avatar: user.avatar,
+            role: user.role,
+            password: user.password
+          },
           keys.secretKey,
           {
             expiresIn: 3600

@@ -3,49 +3,55 @@ import React, { Component } from "react";
 class DashboardInfo extends Component {
   render() {
     return (
-      <div class="row">
-        <div class="col-md-12">
+      <div className="row">
+        <div className="col-md-12">
           <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-light">
-              <li class="breadcrumb-item text-dark active" aria-current="page">
+            <ol className="breadcrumb bg-light">
+              <li
+                className="breadcrumb-item text-dark active"
+                aria-current="page"
+              >
                 My Quizzes
               </li>
             </ol>
           </nav>
-          <div class="card shadow mb-3">
-            <div class="row no-gutters">
-              <div class="col-md-4">
+          <div className="card shadow mb-3">
+            <div className="row no-gutters">
+              <div className="col-md-4">
                 <img
                   src={require("../../assets/img/html.png")}
-                  class="card-img"
+                  className="card-img"
                   alt="..."
                   style={{ height: "100%" }}
                 />
               </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h5 class="card-title">HTML5</h5>
-                  <p class="card-text">Learn the basics of HTML5.</p>
-                  <p class="card-text">
-                    <small class="text-muted">Last visit 3 mins ago</small>
+              <div className="col-md-8">
+                <div className="card-body">
+                  <h5 className="card-title">HTML5</h5>
+                  <p className="card-text">Learn the basics of HTML5.</p>
+                  <p className="card-text">
+                    <small className="text-muted">Last visit 3 mins ago</small>
                   </p>
-                  <button type="button" class="btn btn-danger mb-2 float-right">
+                  <button
+                    type="button"
+                    className="btn btn-danger mb-2 float-right"
+                  >
                     Resume
                   </button>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card-columns">
-            <div class="card shadow-sm">
+          <div className="card-columns">
+            <div className="card shadow-sm">
               <img
-                class="card-img-top img-fluid"
+                className="card-img-top img-fluid"
                 src={require("../../assets/img/css.png")}
                 alt=""
               />
-              <div class="card-body">
-                <h4 class="card-title">CSS3</h4>
-                <p class="card-text">
+              <div className="card-body">
+                <h4 className="card-title">CSS3</h4>
+                <p className="card-text">
                   This is a longer card with supporting text below as a little
                   bit longer.
                 </p>
@@ -53,22 +59,25 @@ class DashboardInfo extends Component {
             </div>
           </div>
           <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-light">
-              <li class="breadcrumb-item text-dark active" aria-current="page">
+            <ol className="breadcrumb bg-light">
+              <li
+                className="breadcrumb-item text-dark active"
+                aria-current="page"
+              >
                 Recommended For You
               </li>
             </ol>
           </nav>
-          <div class="card-columns">
-            <div class="card shadow-sm">
+          <div className="card-columns">
+            <div className="card shadow-sm">
               <img
-                class="card-img-top img-fluid"
-                src="https://source.unsplash.com/random/100x80"
+                className="card-img-top img-fluid"
+                src={require("../../assets/img/javascript.png")}
                 alt=""
               />
-              <div class="card-body">
-                <h4 class="card-title">JavaScript</h4>
-                <p class="card-text">
+              <div className="card-body">
+                <h4 className="card-title">JavaScript</h4>
+                <p className="card-text">
                   This is a longer card with supporting text below as a little
                   bit longer.
                 </p>

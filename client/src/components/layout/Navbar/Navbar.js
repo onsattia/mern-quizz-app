@@ -7,16 +7,36 @@ import {
   getCurrentProfile,
   clearCurrentProfile
 } from "../../../store/actions/profileActions";
+import { getUser } from "../../../store/actions/accountActions";
 
 import Spinner from "../../common/Spinner";
 
 import "./Navbar.css";
 
 class Navbar extends Component {
-  componentDidMount() {
+  constructor() {
+    super();
+    this.state = {
+      id: "",
+      name: "",
+      avatar: ""
+    };
+  }
+  componentWillMount() {
     this.props.getCurrentProfile();
+    const { user } = this.props.user;
+    this.props.getUser(user.id);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.accountCredentials) {
+      this.setState({
+        id: nextProps.accountCredentials._id,
+        name: nextProps.accountCredentials.name,
+        avatar: nextProps.accountCredentials.avatar
+      });
+    }
+  }
   onLogout(e) {
     e.preventDefault();
     this.props.clearCurrentProfile();
@@ -24,7 +44,7 @@ class Navbar extends Component {
   }
 
   render() {
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated } = this.props.user;
     const { profile, loading } = this.props.profile;
 
     let dashboardContent;
@@ -66,20 +86,19 @@ class Navbar extends Component {
             className="btn btn-link nav-link dropdown-toggle"
             data-toggle="dropdown"
           >
+            {this.state.name}{" "}
             <img
               alt=""
-              src={user.avatar}
+              src={this.state.avatar}
               className="rounded-circle"
               style={{ width: "30px" }}
             />{" "}
-            {user.name}{" "}
           </button>
           <div className="dropdown-menu">
             {dashboardContent}
-            <Link to="/edit-profile" className="dropdown-item ">
+            <Link to="/account" className="dropdown-item ">
               Account Settings
             </Link>
-
             <button
               className="dropdown-item"
               onClick={this.onLogout.bind(this)}
@@ -140,16 +159,17 @@ Navbar.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   clearCurrentProfile: PropTypes.func.isRequired,
-  profile: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile,
-  auth: state.auth
+  accountCredentials: state.accountCredentials.accountCredentials,
+  user: state.auth,
+  profile: state.profile
 });
 
 export default connect(
   mapStateToProps,
-  { getCurrentProfile, clearCurrentProfile, logoutUser }
+  { getUser, getCurrentProfile, clearCurrentProfile, logoutUser }
 )(Navbar);

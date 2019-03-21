@@ -19,6 +19,7 @@ import Quizzes from "./components/Quizzes";
 import Dashboard from "./components/dashboard/Dashboard";
 import EditProfile from "./components/edit-profile/EditProfile";
 import Profile from "./components/profile/Profile";
+import Account from "./components/account/Account";
 import NotFound from "./components/not-found/NotFound";
 
 import "./App.css";
@@ -72,6 +73,9 @@ class App extends Component {
                   path="/profile/:handle"
                   component={Profile}
                 />
+              </Switch>
+              <Switch>
+                <PrivateRoute exact path="/account" component={Account} />
               </Switch>
               <Route exact path="/not-found" component={NotFound} />
             </div>
