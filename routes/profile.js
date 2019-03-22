@@ -117,29 +117,35 @@ router.post(
     if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
     if (req.body.instagram) profileFields.social.instagram = req.body.instagram;
 
-    Profile.findOne({ user: req.user.id }).then(profile => {
-      if (profile) {
-        // Update
-        Profile.findOneAndUpdate(
-          { user: req.user.id },
-          { $set: profileFields },
-          { new: true }
-        ).then(profile => res.json(profile));
-      } else {
-        // Create
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        if (profile) {
+          // Update
+          Profile.findOneAndUpdate(
+            { user: req.user.id },
+            { $set: profileFields },
+            { new: true }
+          ).then(profile => res.json(profile));
+        } else {
+          // Create
 
-        // Check handle
-        Profile.findOne({ handle: profileFields.handle }).then(profile => {
-          if (profile) {
-            errors.handle = "Handle already exists";
-            res.status(400).json(errors);
-          }
+          // Check handle
+          Profile.findOne({ handle: profileFields.handle })
+            .then(profile => {
+              if (profile) {
+                errors.handle = "Handle already exists";
+                res.status(400).json(errors);
+              }
 
-          // Save Profile
-          new Profile(profileFields).save().then(profile => res.json(profile));
-        });
-      }
-    });
+              // Save Profile
+              new Profile(profileFields)
+                .save()
+                .then(profile => res.json(profile));
+            })
+            .catch(err => res.status(404).json(err));
+        }
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 
@@ -151,11 +157,13 @@ router.delete(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Profile.findOneAndDelete({ user: req.user.id }).then(() => {
-      User.findOneAndDelete({ _id: req.user.id }).then(() =>
-        res.json({ success: true })
-      );
-    });
+    Profile.findOneAndDelete({ user: req.user.id })
+      .then(() => {
+        User.findOneAndDelete({ _id: req.user.id })
+          .then(() => res.json({ success: true }))
+          .catch(err => res.status(404).json(err));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 

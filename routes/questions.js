@@ -22,9 +22,9 @@ router.get(
       .then(quiz => {
         Question.find({ quiz: quiz._id })
           .then(questions => res.json(questions))
-          .catch(err => res.json(err));
+          .catch(err => res.status(404).json(err));
       })
-      .catch(err => res.json(err));
+      .catch(err => res.status(404).json(err));
   }
 );
 
@@ -159,11 +159,13 @@ router.put(
       return res.status(400).json(errors);
     }
 
-    Question.findOneAndUpdate({ _id: req.params.id }, req.body).then(() => {
-      Question.findOne({ _id: req.params.id }).then(question => {
-        res.send(question);
-      });
-    });
+    Question.findOneAndUpdate({ _id: req.params.id }, req.body)
+      .then(() => {
+        Question.findOne({ _id: req.params.id })
+          .then(question => res.send(question))
+          .catch(err => res.status(404).json(err));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 
@@ -177,9 +179,9 @@ router.delete(
   (req, res) => {
     Question.findOneAndDelete({ _id: req.params.id })
       .then(() =>
-        Question.find().then(question => {
-          res.json(question);
-        })
+        Question.find()
+          .then(question => res.json(question))
+          .catch(err => res.status(404).json(err))
       )
       .catch(err => res.status(404).json(err));
   }
@@ -209,11 +211,9 @@ router.put(
       }
     )
       .then(() => {
-        Question.findOne({ "response._id": req.params.resId }).then(
-          question => {
-            res.send(question);
-          }
-        );
+        Question.findOne({ "response._id": req.params.resId })
+          .then(question => res.send(question))
+          .catch(err => res.status(404).json(err));
       })
       .catch(err => res.status(404).json(err));
   }
@@ -236,7 +236,7 @@ router.delete(
           .then(question =>
             res.json({ responses: question.response, quizId: question.quiz })
           )
-          .catch(err => res.json(err));
+          .catch(err => res.status(404).json(err));
       })
       .catch(err => res.status(404).json(err));
   }

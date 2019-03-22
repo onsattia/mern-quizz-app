@@ -76,35 +76,37 @@ router.post("/register", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ email: req.body.email }).then(user => {
-    if (user) {
-      return res.status(400).json({ email: "Email already exists" });
-    } else {
-      const avatar = gravatar.url(req.body.email, {
-        s: "200",
-        r: "pg",
-        d: "mm"
-      });
-      const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        role: req.body.role,
-        password: req.body.password,
-        avatar
-      });
-
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if (err) throw err;
-          newUser.password = hash;
-          newUser
-            .save()
-            .then(user => res.json(user))
-            .catch(err => res.send(err));
+  User.findOne({ email: req.body.email })
+    .then(user => {
+      if (user) {
+        return res.status(400).json({ email: "Email already exists" });
+      } else {
+        const avatar = gravatar.url(req.body.email, {
+          s: "200",
+          r: "pg",
+          d: "mm"
         });
-      });
-    }
-  });
+        const newUser = new User({
+          name: req.body.name,
+          email: req.body.email,
+          role: req.body.role,
+          password: req.body.password,
+          avatar
+        });
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => res.json(user))
+              .catch(err => res.send(err));
+          });
+        });
+      }
+    })
+    .catch(err => res.status(404).json(err));
 });
 
 // @route POST /users/login
@@ -123,40 +125,42 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
 
   // Find user by email
-  User.findOne({ email }).then(user => {
-    if (!user) {
-      errors.email = "User not found";
-      return res.status(404).json(errors);
-    }
-    bcrypt.compare(password, user.password).then(isMatch => {
-      if (isMatch) {
-        // Sign token
-        jwt.sign(
-          {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            avatar: user.avatar,
-            role: user.role,
-            password: user.password
-          },
-          keys.secretKey,
-          {
-            expiresIn: 3600
-          },
-          (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token
-            });
-          }
-        );
-      } else {
-        errors.password = "Password doesn't match";
-        return res.status(400).json(errors);
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        errors.email = "User not found";
+        return res.status(404).json(errors);
       }
-    });
-  });
+      bcrypt.compare(password, user.password).then(isMatch => {
+        if (isMatch) {
+          // Sign token
+          jwt.sign(
+            {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              avatar: user.avatar,
+              role: user.role,
+              password: user.password
+            },
+            keys.secretKey,
+            {
+              expiresIn: 3600
+            },
+            (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
+            }
+          );
+        } else {
+          errors.password = "Password doesn't match";
+          return res.status(400).json(errors);
+        }
+      });
+    })
+    .catch(err => res.status(404).json(err));
 });
 
 // @route PUT /users/edit/:id
@@ -174,11 +178,15 @@ router.put(
       return res.status(400).json(errors);
     }
 
-    User.findOneAndUpdate({ _id: req.params.id }, req.body).then(() => {
-      User.findOne({ _id: req.params.id }).then(user => {
-        res.send(user);
-      });
-    });
+    User.findOneAndUpdate({ _id: req.params.id }, req.body)
+      .then(() => {
+        User.findOne({ _id: req.params.id })
+          .then(user => {
+            res.send(user);
+          })
+          .catch(err => res.status(404).json(err));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 
@@ -189,11 +197,17 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    User.findOneAndDelete({ _id: req.params.id }).then(() =>
-      User.find().then(user => {
-        res.json(user);
+    Profile.findOneAndDelete({ user: req.params.id })
+      .then(() => {
+        User.findOneAndDelete({ _id: req.params.id })
+          .then(() => {
+            User.find()
+              .then(users => res.send(users))
+              .catch(err => res.status(404).json(err));
+          })
+          .catch(err => res.status(404).json(err));
       })
-    );
+      .catch(err => res.status(404).json(err));
   }
 );
 
