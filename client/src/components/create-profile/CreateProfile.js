@@ -2,19 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-
 import TextFieldGroup from "../common/TextFieldGroup";
-import SelectListGroup from "../common/SelectListGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import InputGroup from "../common/InputGroup";
-import isEmpty from "../../validation/is-empty";
+import SelectListGroup from "../common/SelectListGroup";
+import { createProfile } from "../../store/actions/profileActions";
 
-import {
-  createProfile,
-  getCurrentProfile
-} from "../../store/actions/profileActions";
-
-class EditProfile extends Component {
+class CreateProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +17,6 @@ class EditProfile extends Component {
       website: "",
       location: "",
       status: "",
-      skills: "",
       githubusername: "",
       bio: "",
       twitter: "",
@@ -33,66 +26,15 @@ class EditProfile extends Component {
       instagram: "",
       errors: {}
     };
+
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    this.props.getCurrentProfile();
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
-
-    if (nextProps.profile.profile) {
-      const profile = nextProps.profile.profile;
-      if (Object.keys(profile).length > 0) {
-        // If profile field doesnt exist, make empty string
-        profile.website = !isEmpty(profile.website) ? profile.website : "";
-        profile.location = !isEmpty(profile.location) ? profile.location : "";
-        profile.githubusername = !isEmpty(profile.githubusername)
-          ? profile.githubusername
-          : "";
-        profile.bio = !isEmpty(profile.bio) ? profile.bio : "";
-        profile.social = !isEmpty(profile.social) ? profile.social : {};
-        profile.twitter = !isEmpty(profile.social.twitter)
-          ? profile.social.twitter
-          : "";
-        profile.facebook = !isEmpty(profile.social.facebook)
-          ? profile.social.facebook
-          : "";
-        profile.linkedin = !isEmpty(profile.social.linkedin)
-          ? profile.social.linkedin
-          : "";
-        profile.youtube = !isEmpty(profile.social.youtube)
-          ? profile.social.youtube
-          : "";
-        profile.instagram = !isEmpty(profile.social.instagram)
-          ? profile.social.instagram
-          : "";
-
-        // Set component fields state
-        this.setState({
-          handle: profile.handle,
-          website: profile.website,
-          location: profile.location,
-          status: profile.status,
-          githubusername: profile.githubusername,
-          bio: profile.bio,
-          twitter: profile.twitter,
-          facebook: profile.facebook,
-          linkedin: profile.linkedin,
-          youtube: profile.youtube,
-          instagram: profile.instagram
-        });
-      }
-    }
-  }
-
-  onChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
   }
 
   onSubmit(e) {
@@ -111,8 +53,12 @@ class EditProfile extends Component {
       youtube: this.state.youtube,
       instagram: this.state.instagram
     };
-    console.log(profileData);
+
     this.props.createProfile(profileData, this.props.history);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
@@ -173,20 +119,20 @@ class EditProfile extends Component {
 
     // Select options for status
     const options = [
-      { label: "Select Your Professional Status (Required)", value: 0 },
-      { label: "Student/Learner", value: "Student/Learner" },
+      { label: "* Select Professional Status", value: 0 },
       { label: "Junior Developer", value: "Junior Developer" },
       { label: "Senior Developer", value: "Senior Developer" },
+      { label: "Student/Learning", value: "Student/Learning" },
       { label: "Instructor/Teacher", value: "Instructor/Teacher" },
       { label: "Other", value: "Other" }
     ];
 
     return (
-      <div className="edit-profile">
+      <div className="create-profile">
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <h1 className="text-center">Edit Profile</h1>
+              <h1 className="display-4 text-center">Create Your Profile</h1>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="Profile Handle (Required)"
@@ -194,64 +140,70 @@ class EditProfile extends Component {
                   value={this.state.handle}
                   onChange={this.onChange}
                   error={errors.handle}
-                  info="A unique handle for your profile URL. You can put your full name, nickname..."
                 />
                 <SelectListGroup
+                  placeholder="Status"
                   name="status"
                   value={this.state.status}
                   onChange={this.onChange}
                   options={options}
                   error={errors.status}
+                  info="Give us an idea of where you are at in your career"
                 />
                 <TextFieldGroup
-                  placeholder="Website (Optional)"
+                  placeholder="Website"
                   name="website"
                   value={this.state.website}
                   onChange={this.onChange}
                   error={errors.website}
+                  info="Could be your own website or a company one"
                 />
-
                 <TextFieldGroup
-                  placeholder="Location (Optional)"
+                  placeholder="Location"
                   name="location"
                   value={this.state.location}
                   onChange={this.onChange}
-                  info="City or City & State"
+                  error={errors.location}
+                  info="City or city & state"
                 />
                 <TextFieldGroup
-                  placeholder="Github Username (Optional)"
+                  placeholder="Github Username"
                   name="githubusername"
                   value={this.state.githubusername}
                   onChange={this.onChange}
+                  error={errors.githubusername}
+                  info="If you want your latest repos and a Github link, include your username"
                 />
                 <TextAreaFieldGroup
-                  placeholder="Short Bio (Optional)"
+                  placeholder="Short Bio"
                   name="bio"
                   value={this.state.bio}
                   onChange={this.onChange}
+                  error={errors.bio}
+                  info="Tell us a little about yourself"
                 />
+
                 <div className="mb-3">
                   <button
                     type="button"
-                    onClick={() =>
+                    onClick={() => {
                       this.setState(prevState => ({
                         displaySocialInputs: !prevState.displaySocialInputs
-                      }))
-                    }
+                      }));
+                    }}
                     className="btn btn-light"
                   >
                     Add Social Network Links
-                  </button>{" "}
-                  <span className="text-muted">(Optional)</span>
+                  </button>
+                  <span className="text-muted">Optional</span>
                 </div>
                 {socialInputs}
                 <input
                   type="submit"
-                  value="Edit"
+                  value="Submit"
                   className="btn btn-info btn-block mt-4"
                 />
               </form>
-              <div style={{ marginBottom: "100px" }} />
             </div>
           </div>
         </div>
@@ -260,9 +212,8 @@ class EditProfile extends Component {
   }
 }
 
-EditProfile.propTypes = {
+CreateProfile.propTypes = {
   createProfile: PropTypes.func.isRequired,
-  getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -274,5 +225,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createProfile, getCurrentProfile }
-)(withRouter(EditProfile));
+  { createProfile }
+)(withRouter(CreateProfile));

@@ -23,7 +23,6 @@ export const editUser = (id, newUser) => dispatch => {
   axios
     .put(`/users/${id}`, newUser)
     .then(res => {
-      // console.log("Updated");
       dispatch({
         type: GET_USER,
         payload: res.data

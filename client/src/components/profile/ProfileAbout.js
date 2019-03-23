@@ -20,19 +20,24 @@ class ProfileAbout extends Component {
               <></>
             ) : (
               <>
-                <h3 className="text-center text-dark">Bio</h3>
+                <h3 className="text-center text-dark">About Me</h3>
                 <p className="lead">
                   <span>{profile.bio}</span>
                 </p>
               </>
             )}
-            <hr />
-            <h3 className="text-center text-dark">Skills</h3>
-            <div className="row">
-              <div className="d-flex flex-wrap justify-content-center align-items-center">
-                {skills}
-              </div>
-            </div>
+            {isEmpty(profile.skills) ? (
+              <></>
+            ) : (
+              <>
+                <h3 className="text-center text-dark">Skills</h3>
+                <div className="row">
+                  <div className="d-flex flex-wrap justify-content-center align-items-center">
+                    {skills}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

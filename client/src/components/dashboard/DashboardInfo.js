@@ -1,6 +1,13 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import Spinner from "../../components/common/Spinner";
+import QuizCard from "../QuizCard";
 
 class DashboardInfo extends Component {
+  componentDidMount() {}
+
   render() {
     return (
       <div className="row">
@@ -42,22 +49,7 @@ class DashboardInfo extends Component {
               </div>
             </div>
           </div>
-          <div className="card-columns">
-            <div className="card shadow-sm">
-              <img
-                className="card-img-top img-fluid"
-                src={require("../../assets/img/css.png")}
-                alt=""
-              />
-              <div className="card-body">
-                <h4 className="card-title">CSS3</h4>
-                <p className="card-text">
-                  This is a longer card with supporting text below as a little
-                  bit longer.
-                </p>
-              </div>
-            </div>
-          </div>
+          <div className="card-columns" />
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb bg-light">
               <li
@@ -89,5 +81,14 @@ class DashboardInfo extends Component {
     );
   }
 }
+
+// DashboardInfo.propTypes = {
+//   getQuizzes: PropTypes.func.isRequired,
+//   quizzes: PropTypes.object.isRequired
+// };
+
+// const mapStateToProps = state => ({
+//   quizzes: state.quizzes
+// });
 
 export default DashboardInfo;

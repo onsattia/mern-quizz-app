@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { getUser, editUser } from "../../store/actions/accountActions";
-
+import { deleteAccount } from "../../store/actions/profileActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 
 class Account extends Component {
@@ -21,6 +21,7 @@ class Account extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
   }
 
   onChange(e) {
@@ -38,8 +39,13 @@ class Account extends Component {
     this.props.editUser(this.state.id, newUser);
   }
 
-  componentWillMount() {
+  onDeleteClick() {
+    this.props.deleteAccount();
+  }
+
+  componentDidMount() {
     const { user } = this.props.user;
+
     this.props.getUser(user.id);
   }
 
@@ -92,7 +98,11 @@ class Account extends Component {
             <hr />
             <p>
               Do you want to delete this account?
-              <button type="button" class="btn btn-danger float-right">
+              <button
+                type="button"
+                onClick={this.onDeleteClick}
+                className="btn btn-danger float-right"
+              >
                 Delete
               </button>
             </p>
@@ -106,6 +116,7 @@ class Account extends Component {
 Account.propTypes = {
   getUser: PropTypes.func.isRequired,
   editUser: PropTypes.func.isRequired,
+  deleteAccount: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired
 };
 
@@ -117,5 +128,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getUser, editUser }
+  { getUser, editUser, deleteAccount }
 )(withRouter(Account));

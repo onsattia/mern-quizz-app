@@ -14,29 +14,10 @@ import Spinner from "../../common/Spinner";
 import "./Navbar.css";
 
 class Navbar extends Component {
-  constructor() {
-    super();
-    this.state = {
-      id: "",
-      name: "",
-      avatar: ""
-    };
-  }
-  componentWillMount() {
+  componentDidMount() {
     this.props.getCurrentProfile();
-    const { user } = this.props.user;
-    this.props.getUser(user.id);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.accountCredentials) {
-      this.setState({
-        id: nextProps.accountCredentials._id,
-        name: nextProps.accountCredentials.name,
-        avatar: nextProps.accountCredentials.avatar
-      });
-    }
-  }
   onLogout(e) {
     e.preventDefault();
     this.props.clearCurrentProfile();
@@ -86,10 +67,10 @@ class Navbar extends Component {
             className="btn btn-link nav-link dropdown-toggle"
             data-toggle="dropdown"
           >
-            {this.state.name}{" "}
+            {this.props.user.user.name}{" "}
             <img
               alt=""
-              src={this.state.avatar}
+              src={this.props.user.user.avatar}
               className="rounded-circle"
               style={{ width: "30px" }}
             />{" "}
@@ -164,12 +145,11 @@ Navbar.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  accountCredentials: state.accountCredentials.accountCredentials,
   user: state.auth,
   profile: state.profile
 });
 
 export default connect(
   mapStateToProps,
-  { getUser, getCurrentProfile, clearCurrentProfile, logoutUser }
+  { getCurrentProfile, clearCurrentProfile, logoutUser }
 )(Navbar);

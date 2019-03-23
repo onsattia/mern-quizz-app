@@ -23,8 +23,7 @@ const ProfileSchema = new Schema({
     required: true
   },
   skills: {
-    type: [String],
-    required: true
+    type: [String]
   },
   bio: {
     type: String
@@ -49,12 +48,16 @@ const ProfileSchema = new Schema({
       type: String
     }
   },
-  // activesubscribedQuiz : {
-
-  // },
-  // subscribedQuiz :{
-
-  // },
+  activeQuiz: {
+    type: Schema.Types.ObjectId,
+    ref: "quizzes"
+  },
+  subscribedQuizzes: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "quizzes"
+    }
+  ],
   date: {
     type: Date,
     default: Date.now

@@ -10,6 +10,8 @@ const validateProfileInput = require("../validation/profile");
 const Profile = require("../models/Profile");
 // Load User Model
 const User = require("../models/User");
+// Load Quiz Model
+const Quiz = require("../models/Quiz");
 
 // @route GET /profile
 // @desc  GET current user profile
@@ -22,6 +24,7 @@ router.get(
 
     Profile.findOne({ user: req.user._id })
       .populate("user", ["name", "avatar"])
+      .populate("subscribedQuizzes", ["title", "description", "image"])
       .then(profile => {
         if (!profile) {
           errors.noprofile = "There is no profile for this user";
@@ -93,17 +96,15 @@ router.post(
       // Return any errors with 400 status
       return res.status(400).json(errors);
     }
-
     // Get fields
     const profileFields = {};
     profileFields.user = req.user.id;
-    if (req.body.handle) profileFields.handle = req.body.handle;
-    if (req.body.website) profileFields.website = req.body.website;
-    if (req.body.location) profileFields.location = req.body.location;
-    if (req.body.bio) profileFields.bio = req.body.bio;
-    if (req.body.status) profileFields.status = req.body.status;
-    if (req.body.githubusername)
-      profileFields.githubusername = req.body.githubusername;
+    profileFields.handle = req.body.handle;
+    profileFields.website = req.body.website;
+    profileFields.location = req.body.location;
+    profileFields.bio = req.body.bio;
+    profileFields.status = req.body.status;
+    profileFields.githubusername = req.body.githubusername;
     // Skills - Spilt into array
     if (typeof req.body.skills !== "undefined") {
       profileFields.skills = req.body.skills.split(",");
@@ -149,6 +150,29 @@ router.post(
   }
 );
 
+// @route POST /profile
+// @desc  Add quiz to user profile
+// @access Private
+router.post(
+  "/:quizId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        if (profile) {
+          Quiz.findOne({ _id: req.params.quizId })
+            .then(quiz => {
+              let subscribedQuiz = quiz._id;
+              profile.subscribedQuizzes.unshift(subscribedQuiz);
+
+              profile.save().then(profile => res.json(profile));
+            })
+            .catch(err => res.send(err));
+        }
+      })
+      .catch(err => res.send(err));
+  }
+);
 // @route   DELETE /profiles
 // @desc    Delete user and profile
 // @access  Private

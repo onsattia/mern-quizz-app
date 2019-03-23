@@ -5,6 +5,7 @@ import {
   PROFILE_LOADING,
   CLEAR_CURRENT_PROFILE,
   GET_ERRORS,
+  CLEAR_ERRORS,
   SET_CURRENT_USER
 } from "./types";
 
@@ -50,6 +51,25 @@ export const getProfileByHandle = handle => dispatch => {
 export const createProfile = (profileData, history) => dispatch => {
   axios
     .post("/profile", profileData)
+    .then(() => {
+      dispatch({
+        type: CLEAR_ERRORS,
+        payload: {}
+      });
+      history.push("/dashboard");
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Create Profile
+export const addQuizToProfile = (id, history) => dispatch => {
+  axios
+    .post(`/profile/${id}`)
     .then(() => history.push("/dashboard"))
     .catch(err =>
       dispatch({

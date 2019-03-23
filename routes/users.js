@@ -138,10 +138,7 @@ router.post("/login", (req, res) => {
             {
               id: user.id,
               name: user.name,
-              email: user.email,
-              avatar: user.avatar,
-              role: user.role,
-              password: user.password
+              avatar: user.avatar
             },
             keys.secretKey,
             {

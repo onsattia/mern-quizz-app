@@ -2,10 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-  getCurrentProfile,
-  deleteAccount
-} from "../../store/actions/profileActions";
+import { getCurrentProfile } from "../../store/actions/profileActions";
 
 import ProfileHeader from "../profile/ProfileHeader";
 import DashboardInfo from "./DashboardInfo";
@@ -14,10 +11,6 @@ import Spinner from "../common/Spinner";
 class Dashboard extends Component {
   componentDidMount() {
     this.props.getCurrentProfile();
-  }
-
-  onDeleteClick() {
-    this.props.deleteAccount();
   }
 
   render() {
@@ -30,25 +23,33 @@ class Dashboard extends Component {
     } else {
       // Check if logged in user has a profile
       if (Object.keys(profile).length > 0) {
-        // console.log(profile.)
         dashboardContent = (
           <div className="row">
             <div className="col-md-4">
               <ProfileHeader profile={profile} />
             </div>
             <div className="col-md-8">
-              <DashboardInfo />
+              <DashboardInfo subscribedQuizzes={profile.subscribedQuizzes} />
             </div>
           </div>
         );
       } else {
         dashboardContent = (
           <div className="row">
-            <div className="alert alert-primary" role="alert">
-              <Link to="/edit-profile" className="alert-link">
-                Click Here,
-              </Link>
-              To Complete Your Profile!
+            <div className="col-md-4">
+              <div className="card card-body shadow-sm mb-3">
+                <div className="text-center">
+                  <h3 className="font-weight-bold text-center">Welcome!</h3>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-8">
+              <div className="alert alert-primary" role="alert">
+                <Link to="/create-profile" className="alert-link">
+                  Click Here,
+                </Link>{" "}
+                To Complete Your Profile!
+              </div>
             </div>
           </div>
         );
@@ -64,7 +65,6 @@ class Dashboard extends Component {
 }
 Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
-  deleteAccount: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired
 };
 
@@ -74,5 +74,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getCurrentProfile, deleteAccount }
+  { getCurrentProfile }
 )(Dashboard);

@@ -15,7 +15,6 @@ class Quizzes extends Component {
   }
 
   onFilter(id) {
-    console.log(id);
     this.props.filterByTrack(id);
   }
 
@@ -32,6 +31,7 @@ class Quizzes extends Component {
         return (
           <QuizCard
             key={quiz._id}
+            id={quiz._id}
             title={quiz.title}
             description={quiz.description}
             track={quiz.track}

@@ -14,7 +14,7 @@ class ProfileGithub extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { username } = this.props;
     const { clientId, clientSecret, count, sort } = this.state;
 
