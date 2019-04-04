@@ -45,7 +45,6 @@ class Account extends Component {
 
   componentDidMount() {
     const { user } = this.props.user;
-
     this.props.getUser(user.id);
   }
 

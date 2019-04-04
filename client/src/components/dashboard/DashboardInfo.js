@@ -1,14 +1,25 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-
-import Spinner from "../../components/common/Spinner";
-import QuizCard from "../QuizCard";
 
 class DashboardInfo extends Component {
-  componentDidMount() {}
-
   render() {
+    const { subscribedQuizzes } = this.props;
+    const myQuizzes = subscribedQuizzes.map(quiz => (
+      <div className="card shadow-sm" key={quiz._id}>
+        <img
+          className="card-img-top img-fluid"
+          src={quiz.image}
+          alt=""
+          style={{ height: "180px", width: "100%" }}
+        />
+        <div className="card-body">
+          <h4 className="card-title">{quiz.title}</h4>
+          <p className="card-text">{quiz.description}</p>
+          <button type="button" className="btn btn-danger mb-2 float-right">
+            Resume
+          </button>
+        </div>
+      </div>
+    ));
     return (
       <div className="row">
         <div className="col-md-12">
@@ -22,33 +33,7 @@ class DashboardInfo extends Component {
               </li>
             </ol>
           </nav>
-          <div className="card shadow mb-3">
-            <div className="row no-gutters">
-              <div className="col-md-4">
-                <img
-                  src={require("../../assets/img/html.png")}
-                  className="card-img"
-                  alt="..."
-                  style={{ height: "100%" }}
-                />
-              </div>
-              <div className="col-md-8">
-                <div className="card-body">
-                  <h5 className="card-title">HTML5</h5>
-                  <p className="card-text">Learn the basics of HTML5.</p>
-                  <p className="card-text">
-                    <small className="text-muted">Last visit 3 mins ago</small>
-                  </p>
-                  <button
-                    type="button"
-                    className="btn btn-danger mb-2 float-right"
-                  >
-                    Resume
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div className="card-columns">{myQuizzes}</div>
           <div className="card-columns" />
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb bg-light">

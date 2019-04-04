@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+
 import { logoutUser } from "../../../store/actions/authActions";
 import {
   getCurrentProfile,
   clearCurrentProfile
 } from "../../../store/actions/profileActions";
-import { getUser } from "../../../store/actions/accountActions";
 
 import Spinner from "../../common/Spinner";
 
@@ -95,11 +95,11 @@ class Navbar extends Component {
         <div className="container">
           {isAuthenticated ? (
             <Link className="navbar-brand" to="/dashboard">
-              CdX
+              Qx
             </Link>
           ) : (
             <Link className="navbar-brand" to="/">
-              CdX
+              Qx
             </Link>
           )}
           <button

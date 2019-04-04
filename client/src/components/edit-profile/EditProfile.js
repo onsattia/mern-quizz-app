@@ -111,7 +111,6 @@ class EditProfile extends Component {
       youtube: this.state.youtube,
       instagram: this.state.instagram
     };
-    console.log(profileData);
     this.props.createProfile(profileData, this.props.history);
   }
 
